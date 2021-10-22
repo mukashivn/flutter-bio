@@ -10,7 +10,6 @@ import 'package:boilerplate/utils/locale/app_localization.dart';
 import 'package:boilerplate/utils/routes/routes.dart';
 import 'package:boilerplate/widgets/app_icon_widget.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
-import 'package:boilerplate/widgets/rounded_button_widget.dart';
 import 'package:boilerplate/widgets/textfield_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -62,23 +61,24 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildBody() {
     return GestureDetector(
       onTap: () {
-        FocusScopeNode currentFocus = FocusScope.of(context);
-        if (!currentFocus.hasPrimaryFocus) {
-          currentFocus.unfocus();
-        }
+        DeviceUtils.hideKeyboard(context);
       }, //For dissmiss keyboard when click outside
       child: Material(
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            Container(
-                decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [AppColors.GradientEnd, AppColors.GradientBegin],
-                )),
-                child: _buildLoginForm()),
+            Observer(
+              builder: (context) {
+                return Container(
+                    decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [AppColors.GradientEnd, AppColors.GradientBegin],
+                    )),
+                    child: _buildLoginForm());
+              },
+            ),
             Observer(
               builder: (context) {
                 return _store.success
@@ -125,42 +125,36 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildUserIdField() {
-    return Observer(
-      builder: (context) {
-        return TextFieldWidget(
-          hint: AppLocalizations.of(context).translate(Strings.hintEmail),
-          inputType: TextInputType.emailAddress,
-          icon: Icons.person,
-          textController: _userEmailController,
-          inputAction: TextInputAction.next,
-          autoFocus: false,
-          onChanged: (value) {
-            _store.setUserId(_userEmailController.text);
-          },
-          onFieldSubmitted: (value) {
-            FocusScope.of(context).requestFocus(_passwordFocusNode);
-          },
-          errorText: _store.formErrorStore.userEmail,
-        );
+    return TextFieldWidget(
+      hint: AppLocalizations.of(context).translate(Strings.hintEmail),
+      inputType: TextInputType.emailAddress,
+      icon: Icons.person,
+      hintColor: AppColors.LoginInputHint,
+      textController: _userEmailController,
+      inputAction: TextInputAction.next,
+      autoFocus: false,
+      onChanged: (value) {
+        _store.setUserId(_userEmailController.text);
       },
+      onFieldSubmitted: (value) {
+        FocusScope.of(context).requestFocus(_passwordFocusNode);
+      },
+      errorText: _store.formErrorStore.userEmail,
     );
   }
 
   Widget _buildPasswordField() {
-    return Observer(
-      builder: (context) {
-        return TextFieldWidget(
-          hint: AppLocalizations.of(context).translate(Strings.hintPassword),
-          isObscure: true,
-          icon: Icons.lock,
-          iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
-          textController: _passwordController,
-          focusNode: _passwordFocusNode,
-          errorText: _store.formErrorStore.password,
-          onChanged: (value) {
-            _store.setPassword(_passwordController.text);
-          },
-        );
+    return TextFieldWidget(
+      hint: AppLocalizations.of(context).translate(Strings.hintPassword),
+      isObscure: true,
+      icon: Icons.lock,
+      hintColor: AppColors.LoginInputHint,
+      iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
+      textController: _passwordController,
+      focusNode: _passwordFocusNode,
+      errorText: _store.formErrorStore.password,
+      onChanged: (value) {
+        _store.setPassword(_passwordController.text);
       },
     );
   }
@@ -168,14 +162,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildForgotPasswordButton() {
     return Align(
       alignment: FractionalOffset.centerRight,
-      child: FlatButton(
-        padding: EdgeInsets.all(0.0),
+      child: TextButton(
         child: Text(
           AppLocalizations.of(context).translate(Strings.btnForgotPass),
           style: Theme.of(context)
               .textTheme
               .caption
-              ?.copyWith(color: Colors.orangeAccent),
+              ?.copyWith(color: Colors.white),
         ),
         onPressed: () {},
       ),
@@ -183,19 +176,29 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget _buildSignInButton() {
-    return RoundedButtonWidget(
-      buttonText: AppLocalizations.of(context).translate(Strings.btnSignIn),
-      buttonColor: Colors.orangeAccent,
-      textColor: Colors.white,
-      onPressed: () async {
-        if (_store.canLogin) {
-          DeviceUtils.hideKeyboard(context);
-          _store.login();
-        } else {
-          _showErrorMessage('Please fill in all fields');
-        }
-      },
-    );
+    var canLogin = _store.canLogin;
+    var buttonColor = canLogin ? Colors.white : Color(0xFFd2d2d2);
+    var textColor = canLogin ? AppColors.BaseAppColor : Colors.white;
+    return ButtonTheme(
+        height: 48,
+        child: ElevatedButton(
+          onPressed: () async {
+            if (_store.canLogin) {
+              DeviceUtils.hideKeyboard(context);
+              _store.login();
+            } else {
+              _showErrorMessage('Please fill in all fields');
+            }
+          },
+          style: ElevatedButton.styleFrom(
+              shape: StadiumBorder(),
+              padding: EdgeInsets.all(16),
+              primary: buttonColor),
+          child: Text(
+            AppLocalizations.of(context).translate(Strings.btnSignIn),
+            style: TextStyle(fontSize: 14, color: textColor),
+          ),
+        ));
   }
 
   Widget navigate(BuildContext context) {

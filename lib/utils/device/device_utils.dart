@@ -9,7 +9,10 @@ class DeviceUtils {
   /// hides the keyboard if its already open
   ///
   static hideKeyboard(BuildContext context) {
-    FocusScope.of(context).unfocus();
+    FocusScopeNode currentFocus = FocusScope.of(context);
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
   }
 
   ///

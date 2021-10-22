@@ -16,8 +16,14 @@ class AppColors {
     900: const Color(0xFFD56217)
   };
 
+  static const BaseAppColor = const Color(0xFF00B4C8);
+  static const InputError = const Color(0xFFFF0000);
+  static const IconHintLoginHasValue = const Color(0xFF666666);
+  static const IconHintLoginNoValue = const Color(0xFFFFFFFF);
   static const GradientBegin = const Color(0xFF00B4C8);
   static const GradientEnd = const Color(0xFFB9D787);
   static const LoginInputHasValue = const Color(0xFFFFFFFF);
   static const LoginInputNoValue = const Color(0xFF9cdbcc);
+  static const LoginInputHint = const Color(0xFFFFFFFF);
+
 }
