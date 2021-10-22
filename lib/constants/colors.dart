@@ -15,4 +15,9 @@ class AppColors {
     800: const Color(0xFFDB7424),
     900: const Color(0xFFD56217)
   };
+
+  static const GradientBegin = const Color(0xFF00B4C8);
+  static const GradientEnd = const Color(0xFFB9D787);
+  static const LoginInputHasValue = const Color(0xFFFFFFFF);
+  static const LoginInputNoValue = const Color(0xFF9cdbcc);
 }

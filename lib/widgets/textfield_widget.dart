@@ -1,3 +1,4 @@
+import 'package:boilerplate/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class TextFieldWidget extends StatelessWidget {
@@ -19,26 +20,49 @@ class TextFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    String currentValue = textController.value.text;
+    Color inputTextDecoColor = currentValue != ""
+        ? AppColors.LoginInputHasValue
+        : AppColors.LoginInputNoValue;
+    Color iconTintColor =
+        currentValue != "" ? Color(0xFF666666) : Color(0xFFFFFFFF);
+    return Container(
       padding: padding,
-      child: TextFormField(
-        controller: textController,
-        focusNode: focusNode,
-        onFieldSubmitted: onFieldSubmitted,
-        onChanged: onChanged,
-        autofocus: autoFocus,
-        textInputAction: inputAction,
-        obscureText: this.isObscure,
-        maxLength: 25,
-        keyboardType: this.inputType,
-        style: Theme.of(context).textTheme.body1,
-        decoration: InputDecoration(
-            hintText: this.hint,
-            hintStyle:
-                Theme.of(context).textTheme.body1!.copyWith(color: hintColor),
-            errorText: errorText,
-            counterText: '',
-            icon: this.isIcon ? Icon(this.icon, color: iconColor) : null),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(25)),
+        color: inputTextDecoColor,
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.only(left: 8, right: 8),
+            child: TextFormField(
+              scrollPadding: EdgeInsets.only(bottom:40),
+              controller: textController,
+              focusNode: focusNode,
+              onFieldSubmitted: onFieldSubmitted,
+              onChanged: onChanged,
+              autofocus: autoFocus,
+              textInputAction: inputAction,
+              obscureText: this.isObscure,
+              maxLength: 25,
+              keyboardType: this.inputType,
+              style: Theme.of(context).textTheme.body1,
+              decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.all(2.0),
+                  hintText: this.hint,
+                  hintStyle: Theme.of(context)
+                      .textTheme
+                      .body1!
+                      .copyWith(color: hintColor),
+                  counterText: '',
+                  icon: this.isIcon
+                      ? Icon(this.icon, color: iconTintColor)
+                      : null,
+                  border: InputBorder.none),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -61,5 +85,4 @@ class TextFieldWidget extends StatelessWidget {
     this.autoFocus = false,
     this.inputAction,
   }) : super(key: key);
-
 }

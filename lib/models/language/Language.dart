@@ -12,4 +12,5 @@ class Language {
   Map<String, String>? dictionary;
 
   Language({this.code, this.locale, this.language, this.dictionary});
+
 }

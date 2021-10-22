@@ -1,13 +1,14 @@
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:boilerplate/constants/assets.dart';
+import 'package:boilerplate/constants/colors.dart';
+import 'package:boilerplate/constants/strings.dart';
 import 'package:boilerplate/data/sharedpref/constants/preferences.dart';
-import 'package:boilerplate/utils/routes/routes.dart';
 import 'package:boilerplate/stores/form/form_store.dart';
 import 'package:boilerplate/stores/theme/theme_store.dart';
 import 'package:boilerplate/utils/device/device_utils.dart';
 import 'package:boilerplate/utils/locale/app_localization.dart';
+import 'package:boilerplate/utils/routes/routes.dart';
 import 'package:boilerplate/widgets/app_icon_widget.dart';
-import 'package:boilerplate/widgets/empty_app_bar_widget.dart';
 import 'package:boilerplate/widgets/progress_indicator_widget.dart';
 import 'package:boilerplate/widgets/rounded_button_widget.dart';
 import 'package:boilerplate/widgets/textfield_widget.dart';
@@ -51,71 +52,69 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       primary: true,
-      appBar: EmptyAppBar(),
+      // appBar: EmptyAppBar(),
       body: _buildBody(),
+      // resizeToAvoidBottomInset: false, //TODO: If set false will cannot scroll view
     );
   }
 
   // body methods:--------------------------------------------------------------
   Widget _buildBody() {
-    return Material(
-      child: Stack(
-        children: <Widget>[
-          MediaQuery.of(context).orientation == Orientation.landscape
-              ? Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: _buildLeftSide(),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: _buildRightSide(),
-                    ),
-                  ],
-                )
-              : Center(child: _buildRightSide()),
-          Observer(
-            builder: (context) {
-              return _store.success
-                  ? navigate(context)
-                  : _showErrorMessage(_store.errorStore.errorMessage);
-            },
-          ),
-          Observer(
-            builder: (context) {
-              return Visibility(
-                visible: _store.loading,
-                child: CustomProgressIndicatorWidget(),
-              );
-            },
-          )
-        ],
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      }, //For dissmiss keyboard when click outside
+      child: Material(
+        child: Stack(
+          fit: StackFit.expand,
+          children: <Widget>[
+            Container(
+                decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [AppColors.GradientEnd, AppColors.GradientBegin],
+                )),
+                child: _buildLoginForm()),
+            Observer(
+              builder: (context) {
+                return _store.success
+                    ? navigate(context)
+                    : _showErrorMessage(_store.errorStore.errorMessage);
+              },
+            ),
+            Observer(
+              builder: (context) {
+                return Visibility(
+                  visible: _store.loading,
+                  child: CustomProgressIndicatorWidget(),
+                );
+              },
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildLeftSide() {
-    return SizedBox.expand(
-      child: Image.asset(
-        Assets.carBackground,
-        fit: BoxFit.cover,
-      ),
-    );
-  }
-
-  Widget _buildRightSide() {
+  Widget _buildLoginForm() {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            AppIconWidget(image: 'assets/icons/ic_appicon.png'),
-            SizedBox(height: 24.0),
+            SizedBox(height: 72.0),
+            AppIconWidget(
+                image: Assets.appLogo, tinColor: Colors.white, aspectSize: 0.4),
+            SizedBox(height: 48.0),
             _buildUserIdField(),
+            SizedBox(height: 24.0),
             _buildPasswordField(),
             _buildForgotPasswordButton(),
             _buildSignInButton()
@@ -129,10 +128,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return Observer(
       builder: (context) {
         return TextFieldWidget(
-          hint: AppLocalizations.of(context).translate('login_et_user_email'),
+          hint: AppLocalizations.of(context).translate(Strings.hintEmail),
           inputType: TextInputType.emailAddress,
           icon: Icons.person,
-          iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
           textController: _userEmailController,
           inputAction: TextInputAction.next,
           autoFocus: false,
@@ -152,10 +150,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return Observer(
       builder: (context) {
         return TextFieldWidget(
-          hint:
-              AppLocalizations.of(context).translate('login_et_user_password'),
+          hint: AppLocalizations.of(context).translate(Strings.hintPassword),
           isObscure: true,
-          padding: EdgeInsets.only(top: 16.0),
           icon: Icons.lock,
           iconColor: _themeStore.darkMode ? Colors.white70 : Colors.black54,
           textController: _passwordController,
@@ -175,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: FlatButton(
         padding: EdgeInsets.all(0.0),
         child: Text(
-          AppLocalizations.of(context).translate('login_btn_forgot_password'),
+          AppLocalizations.of(context).translate(Strings.btnForgotPass),
           style: Theme.of(context)
               .textTheme
               .caption
@@ -188,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildSignInButton() {
     return RoundedButtonWidget(
-      buttonText: AppLocalizations.of(context).translate('login_btn_sign_in'),
+      buttonText: AppLocalizations.of(context).translate(Strings.btnSignIn),
       buttonColor: Colors.orangeAccent,
       textColor: Colors.white,
       onPressed: () async {
