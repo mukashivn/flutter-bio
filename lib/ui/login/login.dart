@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _buildUserIdField() {
     return TextFieldWidget(
       hint: AppLocalizations.of(context).translate(Strings.hintEmail),
-      inputType: TextInputType.emailAddress,
+      inputType: TextInputType.phone,
       icon: Icons.phone_android,
       hintColor: AppColors.LoginInputHint,
       textController: _userEmailController,

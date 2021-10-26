@@ -1,6 +1,5 @@
 import 'package:boilerplate/stores/error/error_store.dart';
 import 'package:mobx/mobx.dart';
-import 'package:validators/validators.dart';
 
 part 'form_store.g.dart';
 
@@ -46,7 +45,9 @@ abstract class _FormStore with Store {
 
   @computed
   bool get canLogin =>
-      !formErrorStore.hasErrorsInLogin && userEmail.isNotEmpty && password.isNotEmpty;
+      !formErrorStore.hasErrorsInLogin &&
+      userEmail.isNotEmpty &&
+      password.isNotEmpty;
 
   @computed
   bool get canRegister =>
@@ -76,11 +77,9 @@ abstract class _FormStore with Store {
   }
 
   @action
-  void validateUserEmail(String value) {
+  void validateUserEmail(String value) async {
     if (value.isEmpty) {
       formErrorStore.userEmail = "Email can't be empty";
-    } else if (!isEmail(value)) {
-      formErrorStore.userEmail = 'Please enter a valid email address';
     } else {
       formErrorStore.userEmail = null;
     }
