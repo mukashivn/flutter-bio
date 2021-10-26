@@ -128,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return TextFieldWidget(
       hint: AppLocalizations.of(context).translate(Strings.hintEmail),
       inputType: TextInputType.emailAddress,
-      icon: Icons.person,
+      icon: Icons.phone_android,
       hintColor: AppColors.LoginInputHint,
       textController: _userEmailController,
       inputAction: TextInputAction.next,
