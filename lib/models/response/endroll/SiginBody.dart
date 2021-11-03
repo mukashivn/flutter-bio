@@ -1,42 +1,44 @@
 class SignBody {
-  String address;
-  String customer_id;
-  String customer_name;
-  String customer_mobile;
-  String customer_birthday;
-  String customer_email;
-  String customer_gender;
-  String avatar_url;
-  String customer_code;
+  String? address;
+  String? customer_id;
+  String? customer_name;
+  String? customer_mobile;
+  String? customer_birthday;
+  String? customer_email;
+  String? customer_gender;
+  String? avatar_url;
+  String? customer_code;
 
 //<editor-fold desc="Data Methods">
 
   SignBody({
-    required this.address,
-    required this.customer_id,
-    required this.customer_name,
-    required this.customer_mobile,
-    required this.customer_birthday,
-    required this.customer_email,
-    required this.customer_gender,
-    required this.avatar_url,
-    required this.customer_code,
+    this.address,
+    this.customer_id,
+    this.customer_name,
+    this.customer_mobile,
+    this.customer_birthday,
+    this.customer_email,
+    this.customer_gender,
+    this.avatar_url,
+    this.customer_code,
   });
 
-  @override
+//<ed@override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is SignBody &&
-          runtimeType == other.runtimeType &&
-          address == other.address &&
-          customer_id == other.customer_id &&
-          customer_name == other.customer_name &&
-          customer_mobile == other.customer_mobile &&
-          customer_birthday == other.customer_birthday &&
-          customer_email == other.customer_email &&
-          customer_gender == other.customer_gender &&
-          avatar_url == other.avatar_url &&
-          customer_code == other.customer_code);
+          (other is SignBody &&
+              runtimeType == other.runtimeType &&
+              address == other.address &&
+              customer_id == other.customer_id &&
+              customer_name == other.customer_name &&
+              customer_mobile == other.customer_mobile &&
+              customer_birthday == other.customer_birthday &&
+              customer_email == other.customer_email &&
+              customer_gender == other.customer_gender &&
+              avatar_url == other.avatar_url &&
+              customer_code == other.customer_code
+          );
+
 
   @override
   int get hashCode =>
@@ -49,6 +51,7 @@ class SignBody {
       customer_gender.hashCode ^
       avatar_url.hashCode ^
       customer_code.hashCode;
+
 
   @override
   String toString() {
@@ -64,6 +67,7 @@ class SignBody {
         ' customer_code: $customer_code,' +
         '}';
   }
+
 
   SignBody copyWith({
     String? address,
@@ -88,6 +92,7 @@ class SignBody {
       customer_code: customer_code ?? this.customer_code,
     );
   }
+
 
   Map<String, dynamic> toMap() {
     return {
@@ -116,6 +121,4 @@ class SignBody {
       customer_code: map['customer_code'] as String,
     );
   }
-
-//</editor-fold>
 }

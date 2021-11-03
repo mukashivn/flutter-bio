@@ -2,14 +2,14 @@ import 'package:boilerplate/models/response/endroll/AuthenticationBody.dart';
 import 'package:boilerplate/models/response/endroll/SiginBody.dart';
 
 class LoginResponseBody {
-  SignBody signIn_info;
-  AuthenticationBody authentication_info;
+  SignBody? signIn_info;
+  AuthenticationBody? authentication_info;
 
 //<editor-fold desc="Data Methods">
 
   LoginResponseBody({
-    required this.signIn_info,
-    required this.authentication_info,
+    this.signIn_info,
+    this.authentication_info,
   });
 
   @override

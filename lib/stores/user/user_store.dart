@@ -1,3 +1,9 @@
+import 'dart:developer';
+
+import 'package:boilerplate/models/common/BaseResponse.dart';
+import 'package:boilerplate/models/request/LoginRequest.dart';
+import 'package:boilerplate/models/response/endroll/LoginResponse.dart';
+import 'package:boilerplate/models/response/endroll/LoginResponseBody.dart';
 import 'package:boilerplate/stores/error/error_store.dart';
 import 'package:mobx/mobx.dart';
 
@@ -23,7 +29,6 @@ abstract class _UserStore with Store {
 
   // constructor:---------------------------------------------------------------
   _UserStore(Repository repository) : this._repository = repository {
-
     // setting up disposers
     _setupDisposers();
 
@@ -43,15 +48,16 @@ abstract class _UserStore with Store {
   }
 
   // empty responses:-----------------------------------------------------------
-  static ObservableFuture<bool> emptyLoginResponse =
-  ObservableFuture.value(false);
+  static ObservableFuture<BaseResponse<LoginResponseBody>?> emptyLoginResponse =
+      ObservableFuture.value(null);
 
   // store variables:-----------------------------------------------------------
   @observable
   bool success = false;
 
   @observable
-  ObservableFuture<bool> loginFuture = emptyLoginResponse;
+  ObservableFuture<BaseResponse<LoginResponseBody>?> loginFuture =
+      emptyLoginResponse;
 
   @computed
   bool get isLoading => loginFuture.status == FutureStatus.pending;
@@ -59,11 +65,16 @@ abstract class _UserStore with Store {
   // actions:-------------------------------------------------------------------
   @action
   Future login(String email, String password) async {
-
-    final future = _repository.login(email, password);
+    final LoginRequest loginRequest = new LoginRequest(
+        client_version: "10",
+        password: password,
+        username: email,
+        client_os: "ANDROID");
+    final future = _repository.loginVenesa(loginRequest);
     loginFuture = ObservableFuture(future);
-    await future.then((value) async {
-      if (value) {
+    await future.then((response) async {
+      log('Login Response => ' + response.toString());
+      if (response.code == '0') {
         _repository.saveIsLoggedIn(true);
         this.isLoggedIn = true;
         this.success = true;

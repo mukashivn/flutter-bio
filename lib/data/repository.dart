@@ -1,9 +1,14 @@
 import 'dart:async';
 
 import 'package:boilerplate/data/local/datasources/post/post_datasource.dart';
+import 'package:boilerplate/data/network/apis/endroll/endroll_api.dart';
 import 'package:boilerplate/data/sharedpref/shared_preference_helper.dart';
+import 'package:boilerplate/models/common/BaseResponse.dart';
 import 'package:boilerplate/models/post/post.dart';
 import 'package:boilerplate/models/post/post_list.dart';
+import 'package:boilerplate/models/request/LoginRequest.dart';
+import 'package:boilerplate/models/response/endroll/LoginResponse.dart';
+import 'package:boilerplate/models/response/endroll/LoginResponseBody.dart';
 import 'package:sembast/sembast.dart';
 
 import 'local/constants/db_constants.dart';
@@ -16,11 +21,15 @@ class Repository {
   // api objects
   final PostApi _postApi;
 
+  //Endroll API objects
+  final EndRollApi _endRollApi;
+
   // shared pref object
   final SharedPreferenceHelper _sharedPrefsHelper;
 
   // constructor
-  Repository(this._postApi, this._sharedPrefsHelper, this._postDataSource);
+  Repository(this._postApi, this._sharedPrefsHelper, this._postDataSource,
+      this._endRollApi);
 
   // Post: ---------------------------------------------------------------------
   Future<PostList> getPosts() async {
@@ -66,16 +75,15 @@ class Repository {
       .then((id) => id)
       .catchError((error) => throw error);
 
-
   // Login:---------------------------------------------------------------------
   Future<bool> login(String email, String password) async {
-    return await Future.delayed(Duration(seconds: 2), ()=> true);
+    return await Future.delayed(Duration(seconds: 2), () => true);
   }
 
   Future<void> saveIsLoggedIn(bool value) =>
       _sharedPrefsHelper.saveIsLoggedIn(value);
 
-  Future<bool> get isLoggedIn => _sharedPrefsHelper.isLoggedIn;
+  Future<bool> get  isLoggedIn => _sharedPrefsHelper.isLoggedIn;
 
   // Theme: --------------------------------------------------------------------
   Future<void> changeBrightnessToDark(bool value) =>
@@ -88,4 +96,13 @@ class Repository {
       _sharedPrefsHelper.changeLanguage(value);
 
   String? get currentLanguage => _sharedPrefsHelper.currentLanguage;
+
+  /// EndRoll API
+  /// */
+  Future<BaseResponse<LoginResponseBody>> loginVenesa(LoginRequest request) async {
+    return await _endRollApi.signIn(request).then((loginResponse) {
+      //TODO: Will save login information
+      return loginResponse;
+    }).catchError((error) => throw error);
+  }
 }

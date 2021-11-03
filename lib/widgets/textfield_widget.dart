@@ -49,7 +49,7 @@ class TextFieldWidget extends StatelessWidget {
                   obscureText: this.isObscure,
                   maxLength: 25,
                   keyboardType: this.inputType,
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: TextStyle(fontSize: 16.0, color: Colors.black54),
                   decoration: InputDecoration(
                       contentPadding: const EdgeInsets.all(2.0),
                       hintText: this.hint,

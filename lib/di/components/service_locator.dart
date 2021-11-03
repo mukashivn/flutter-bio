@@ -50,6 +50,7 @@ Future<void> setupLocator() async {
     getIt<PostApi>(),
     getIt<SharedPreferenceHelper>(),
     getIt<PostDataSource>(),
+    getIt<EndRollApi>()
   ));
 
   // stores:--------------------------------------------------------------------

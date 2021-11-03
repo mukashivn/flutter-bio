@@ -1,12 +1,12 @@
 class AuthenticationBody {
-  String access_token;
-  String authentication_type;
+  String? access_token;
+  String? authentication_type;
 
 //<editor-fold desc="Data Methods">
 
   AuthenticationBody({
-    required this.access_token,
-    required this.authentication_type,
+    this.access_token,
+    this.authentication_type,
   });
 
   @override

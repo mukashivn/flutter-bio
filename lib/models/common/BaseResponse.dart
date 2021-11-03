@@ -1,15 +1,15 @@
 class BaseResponse<T> {
-  String code;
-  String message;
-  String system_message;
+  String? code;
+  String? message;
+  String? system_message;
   T? data;
 
 //<editor-fold desc="Data Methods">
 
   BaseResponse({
-    required this.code,
-    required this.message,
-    required this.system_message,
+    this.code,
+    this.message,
+    this.system_message,
     this.data,
   });
 
@@ -65,10 +65,10 @@ class BaseResponse<T> {
 
   factory BaseResponse.fromMap(Map<String, dynamic> map) {
     return BaseResponse(
-      code: map['code'] as String,
-      message: map['message'] as String,
-      system_message: map['system_message'] as String,
-      data: map['data'] as T,
+      code: map['code'] ?? map['code'] as String,
+      message: map['message'] ?? map['message'] as String,
+      system_message: map['system_message'] ?? map['system_message'] as String,
+      data: map['data'] != null ? map['data'] as T : null,
     );
   }
 
